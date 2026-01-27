@@ -19,6 +19,16 @@
 
     <packaging>pom</packaging>
 
+    <modules>
+        <module>concert-common</module>
+        <module>concert-gateway</module>
+        <module>concert-auth</module>
+        <module>concert-user</module>
+        <module>concert-product</module>
+        <module>concert-order</module>
+        <module>concert-pay</module>
+    </modules>
+
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

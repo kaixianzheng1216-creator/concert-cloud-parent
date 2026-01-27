@@ -1,0 +1,10 @@
+server:
+  port: 10020
+
+spring:
+  application:
+    name: concert-user
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
