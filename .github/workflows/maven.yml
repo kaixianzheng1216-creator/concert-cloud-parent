@@ -1,0 +1,44 @@
+name: CI/CD
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [gateway, auth, user, product, order, pay]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - run: mvn package -DskipTests -pl concert-${{ matrix.service }} -am
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          file: concert-${{ matrix.service }}/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/concert-${{ matrix.service }}:latest
+
+      - uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/concert-${{ matrix.service }}:latest"
+            CONTAINER_NAME="concert-${{ matrix.service }}"
+            docker pull $IMAGE_NAME
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+            docker run -d --name $CONTAINER_NAME --restart always --net=host $IMAGE_NAME
