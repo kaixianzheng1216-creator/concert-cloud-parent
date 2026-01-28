@@ -8,13 +8,6 @@ services:
       - "8848:8848"
       - "9848:9848"
       - "9849:9849"
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1024M
-        reservations:
-          memory: 512M
 
   mysql:
     image: mysql:8.0
@@ -24,26 +17,12 @@ services:
       - MYSQL_DATABASE=concert_cloud
     ports:
       - "3306:3306"
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1024M
-        reservations:
-          memory: 512M
 
   redis:
     image: redis:7-alpine
     container_name: redis-server
     ports:
       - "6379:6379"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          memory: 256M
 
   rabbitmq:
     image: rabbitmq:3.12-management
@@ -51,10 +30,3 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          memory: 256M

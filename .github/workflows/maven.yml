@@ -1,4 +1,4 @@
-name: 演唱会微服务持续集成与部署
+name: 持续集成与部署
 
 on:
   push:
@@ -7,9 +7,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         service: [gateway, auth, user, product, order, pay]
+
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
