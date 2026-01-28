@@ -1,5 +1,5 @@
 FROM eclipse-temurin:21-jre-alpine
 
-COPY target/*.jar app.jar
+COPY concert-gateway/target/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
