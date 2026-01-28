@@ -9,7 +9,65 @@ spring:
       discovery:
         server-addr: localhost:8848
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+      routes:
+        - id: concert-auth
+          uri: lb://concert-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
+        - id: concert-user
+          uri: lb://concert-user
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=1
+        - id: concert-product
+          uri: lb://concert-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - StripPrefix=1
+        - id: concert-order
+          uri: lb://concert-order
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - StripPrefix=1
+        - id: concert-pay
+          uri: lb://concert-pay
+          predicates:
+            - Path=/api/pay/**
+          filters:
+            - StripPrefix=1
+
+knife4j:
+  gateway:
+    enabled: true
+    strategy: manual
+    routes:
+      - name: 认证服务
+        url: /api/auth/v3/api-docs
+        service-name: concert-auth
+        context-path: /api/auth
+        order: 1
+      - name: 用户服务
+        url: /api/user/v3/api-docs
+        service-name: concert-user
+        context-path: /api/user
+        order: 2
+      - name: 商品服务
+        url: /api/product/v3/api-docs
+        service-name: concert-product
+        context-path: /api/product
+        order: 3
+      - name: 订单服务
+        url: /api/order/v3/api-docs
+        service-name: concert-order
+        context-path: /api/order
+        order: 4
+      - name: 支付服务
+        url: /api/pay/v3/api-docs
+        service-name: concert-pay
+        context-path: /api/pay
+        order: 5
