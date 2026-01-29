@@ -1,7 +1,6 @@
 services:
   nacos:
     image: nacos/nacos-server:v2.3.1
-    container_name: nacos-server
     environment:
       - MODE=standalone
     ports:
@@ -11,7 +10,6 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: mysql-server
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=concert_cloud
@@ -20,13 +18,36 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: redis-server
     ports:
       - "6379:6379"
 
   rabbitmq:
     image: rabbitmq:3.12-management
-    container_name: rabbitmq-server
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  loki:
+    image: grafana/loki:2.9.2
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_USERS_DEFAULT_LANGUAGE=zh-Hans
+    ports:
+      - "3000:3000"
+    depends_on:
+      - loki
