@@ -5,6 +5,7 @@ import com.example.concert.common.dto.OrderDTO;
 import com.example.concert.common.dto.UserDTO;
 import com.example.concert.order.client.UserClient;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public class OrderController {
 
     @Operation(summary = "根据 ID 获取订单信息")
     @GetMapping("/{id}")
-    public Result<OrderDTO> getOrderById(@PathVariable Long id) {
+    public Result<OrderDTO> getOrderById(@Parameter(description = "订单 ID") @PathVariable Long id) {
         OrderDTO orderDTO = OrderDTO.builder()
                 .id(id)
                 .orderNo("ORD_" + System.currentTimeMillis())

@@ -12,6 +12,10 @@
     <artifactId>concert-common</artifactId>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>
