@@ -1,5 +1,7 @@
 server:
   port: 10050
+  servlet:
+    context-path: /pay
 
 spring:
   application:
