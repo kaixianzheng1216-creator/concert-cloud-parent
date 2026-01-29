@@ -49,7 +49,6 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      max-parallel: 2
       matrix:
         service: ${{ fromJSON(needs.check-changes.outputs.matrix) }}
 
