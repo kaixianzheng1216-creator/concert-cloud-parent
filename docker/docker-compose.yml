@@ -27,13 +27,6 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  loki:
-    image: grafana/loki:2.9.2
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
-
   promtail:
     image: grafana/promtail:2.9.2
     volumes:
@@ -42,6 +35,13 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers
     depends_on:
       - loki
+
+  loki:
+    image: grafana/loki:2.9.2
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
 
   grafana:
     image: grafana/grafana:latest
