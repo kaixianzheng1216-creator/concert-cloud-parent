@@ -101,5 +101,5 @@ jobs:
               --name $CONTAINER_NAME \
               --restart always \
               --net=host \
-              --cpus=0.5 \
+              --cpus=0.3 \
               $IMAGE_NAME
