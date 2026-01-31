@@ -90,7 +90,15 @@ jobs:
           script: |
             IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/concert-${{ matrix.service }}:latest"
             CONTAINER_NAME="concert-${{ matrix.service }}"
+            
             docker pull $IMAGE_NAME
+            
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
-            docker run -d --name $CONTAINER_NAME --restart always --net=host $IMAGE_NAME
+            
+            docker run -d \
+              --name $CONTAINER_NAME \
+              --restart always \
+              --net=host \
+              --cpus=0.5 \
+              $IMAGE_NAME
