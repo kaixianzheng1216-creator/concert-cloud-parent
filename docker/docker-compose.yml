@@ -72,7 +72,7 @@ services:
     image: apache/skywalking-ui:9.5.0
     container_name: skywalking-ui
     ports:
-      - "8080:8080"
+      - "9080:8080"
     environment:
       SW_OAP_ADDRESS: http://skywalking-oap:12800
     depends_on:
