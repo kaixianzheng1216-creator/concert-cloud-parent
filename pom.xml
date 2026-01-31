@@ -37,6 +37,7 @@
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
         <knife4j.version>4.5.0</knife4j.version>
         <logbook.version>3.9.0</logbook.version>
+        <skywalking.version>9.0.0</skywalking.version>
     </properties>
 
     <dependencyManagement>
@@ -73,6 +74,12 @@
                 <groupId>org.zalando</groupId>
                 <artifactId>logbook-spring-boot-starter</artifactId>
                 <version>${logbook.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-logback-1.x</artifactId>
+                <version>${skywalking.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

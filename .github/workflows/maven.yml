@@ -99,6 +99,7 @@ jobs:
             
             docker run -d \
               --name $CONTAINER_NAME \
-              --restart always \
               --net=host \
+              -v /opt/skywalking-agent:/skywalking-agent \
+              -e JAVA_OPTS="-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=concert-${{ matrix.service }}" \
               $IMAGE_NAME
