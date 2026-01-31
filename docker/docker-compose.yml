@@ -38,8 +38,6 @@ services:
       - ./promtail-config.yaml:/etc/promtail/config.yml
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/containers:/var/lib/docker/containers
-    depends_on:
-      - loki
 
   loki:
     image: grafana/loki:2.9.2
@@ -56,8 +54,14 @@ services:
       - GF_USERS_DEFAULT_LANGUAGE=zh-Hans
     ports:
       - "3000:3000"
-    depends_on:
-      - loki
+
+  elasticsearch:
+    image: elasticsearch:7.17.10
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
 
   skywalking-oap:
     image: apache/skywalking-oap-server:9.5.0
@@ -66,7 +70,8 @@ services:
       - "11800:11800"
       - "12800:12800"
     environment:
-      SW_STORAGE: h2
+      SW_STORAGE: elasticsearch
+      SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
 
   skywalking-ui:
     image: apache/skywalking-ui:9.5.0
@@ -75,5 +80,3 @@ services:
       - "9080:8080"
     environment:
       SW_OAP_ADDRESS: http://skywalking-oap:12800
-    depends_on:
-      - skywalking-oap
