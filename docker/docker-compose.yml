@@ -28,6 +28,7 @@ services:
       - "9200:9200"
     environment:
       - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 
   nacos:
     image: nacos/nacos-server:v2.3.1
@@ -48,6 +49,9 @@ services:
     environment:
       SW_STORAGE: elasticsearch
       SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+      JAVA_OPTS: "-Xms512m -Xmx512m"
+    depends_on:
+      - elasticsearch
 
   skywalking-ui:
     image: apache/skywalking-ui:9.5.0
@@ -56,6 +60,19 @@ services:
       - "9080:8080"
     environment:
       SW_OAP_ADDRESS: http://skywalking-oap:12800
+    depends_on:
+      - skywalking-oap
+
+  kibana:
+    image: kibana:7.17.10
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - "I18N_LOCALE=zh-CN"
+    depends_on:
+      - elasticsearch
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.17.10
@@ -66,11 +83,6 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers
       - /var/run/docker.sock:/var/run/docker.sock
     command: filebeat -e -strict.perms=false
-
-  kibana:
-    image: kibana:7.17.10
-    container_name: kibana
-    ports:
-      - "5601:5601"
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+      - kibana
