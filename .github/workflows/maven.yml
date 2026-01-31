@@ -23,6 +23,7 @@ jobs:
             common:
               - 'pom.xml'
               - 'concert-common/**'
+              - '.github/workflows/maven.yml'
             gateway: 'concert-gateway/**'
             auth: 'concert-auth/**'
             user: 'concert-user/**'
