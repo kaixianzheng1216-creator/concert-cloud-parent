@@ -1,14 +1,4 @@
 services:
-  nacos:
-    image: nacos/nacos-server:v2.3.1
-    container_name: nacos-server
-    environment:
-      - MODE=standalone
-    ports:
-      - "8848:8848"
-      - "9848:9848"
-      - "9849:9849"
-
   mysql:
     image: mysql:8.0
     container_name: mysql-server
@@ -31,30 +21,6 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  promtail:
-    image: grafana/promtail:2.9.2
-    container_name: promtail-server
-    volumes:
-      - ./promtail-config.yaml:/etc/promtail/config.yml
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/docker/containers:/var/lib/docker/containers
-
-  loki:
-    image: grafana/loki:2.9.2
-    container_name: loki-server
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana-server
-    environment:
-      - GF_USERS_DEFAULT_LANGUAGE=zh-Hans
-    ports:
-      - "3000:3000"
-
   elasticsearch:
     image: elasticsearch:7.17.10
     container_name: elasticsearch
@@ -62,6 +28,16 @@ services:
       - "9200:9200"
     environment:
       - discovery.type=single-node
+
+  nacos:
+    image: nacos/nacos-server:v2.3.1
+    container_name: nacos-server
+    environment:
+      - MODE=standalone
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
 
   skywalking-oap:
     image: apache/skywalking-oap-server:9.5.0
@@ -80,3 +56,21 @@ services:
       - "9080:8080"
     environment:
       SW_OAP_ADDRESS: http://skywalking-oap:12800
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.17.10
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: filebeat -e -strict.perms=false
+
+  kibana:
+    image: kibana:7.17.10
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
