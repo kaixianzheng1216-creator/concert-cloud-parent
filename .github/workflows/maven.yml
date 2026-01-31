@@ -51,6 +51,7 @@ jobs:
     strategy:
       matrix:
         service: ${{ fromJSON(needs.check-changes.outputs.matrix) }}
+      max-parallel: 2
 
     steps:
       - name: 检出代码
